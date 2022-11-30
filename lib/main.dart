@@ -1,34 +1,65 @@
-// imports packages (i.e. libraries) similar to Java
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// main function, used to launch app - note the lambda call
 void main() => runApp(const HelloWorldApp());
 
-// define the title as a global const so it can be used everywhere
-const title = 'Hello World';
+const title = 'Ilia\'s startup name generator';
 
-// this is the app - we will learn about widgets later
-class HelloWorldApp extends StatelessWidget {
-  // this is the constructor - we will learn about the 'key' later
-  const HelloWorldApp({super.key});
+class RandomWords extends StatefulWidget {
+  const RandomWords({Key? key}) : super(key: key);
 
-  // this is the function that builds the UI - overridden from StatelessWidget
+  @override
+  State<RandomWords> createState() => _RandomWordsState();
+}
+
+class _RandomWordsState extends State<RandomWords> {
+  final _suggestions = <WordPair>[];
+  final _biggerFont = const TextStyle(fontSize: 18);
+  final myName = "Ilia";
+
+  String _insertMyName(WordPair pair) {
+    return "${pair.first}-$myName-${pair.second}";
+  }
+
   @override
   Widget build(BuildContext context) {
-    // the Material app uses the Material design to form a frame: m2.material.io/design
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemBuilder: /*1*/ (context, i) {
+        if (i.isOdd) return const Divider();
+
+        final index = i ~/ 2;
+        if (index >= _suggestions.length) {
+          _suggestions.addAll(generateWordPairs().take(10));
+        }
+        return ListTile(
+          title: Text(
+            _insertMyName(_suggestions[index]),
+            style: _biggerFont,
+            textAlign: TextAlign.center,
+          ),
+          onTap: () async {
+            final fakeUrl = Uri.parse("https://www.google.com/search?q=${_insertMyName(_suggestions[index])}");
+            if (!await launchUrl(fakeUrl)) {
+              throw 'Could not launch $fakeUrl';
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class HelloWorldApp extends StatelessWidget {
+  const HelloWorldApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
-        // title (left side) is a 'named' parameter, and the title (right)
-        // is the constant value defined earlier
         title: title,
-        // defines the appbar (on top) and also allows for floating buttons, toasts/snacks, etc.
         home: Scaffold(
-            // simple appbar with a title
             appBar: AppBar(title: const Text(title)),
-            // the body consists of a simple text UI element
-            body: const Center(
-                child: Text(
-              'Hello, Ilia!',
-              style: TextStyle(color: Colors.red, fontSize: 30),
-            ))));
+            body: Center(child: RandomWords())));
   }
 }
