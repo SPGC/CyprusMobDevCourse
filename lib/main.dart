@@ -1,57 +1,12 @@
-import 'package:english_words/english_words.dart';
+// imports packages (i.e. libraries) similar to Java
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(const HelloWorldApp());
 
-const title = 'Ilia\'s startup name generator';
-
-class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
-
-  @override
-  State<RandomWords> createState() => _RandomWordsState();
-}
-
-class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18);
-  final myName = "Ilia";
-
-  String _insertMyName(WordPair pair) {
-    return "${pair.first}-$myName-${pair.second}";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemBuilder: /*1*/ (context, i) {
-        if (i.isOdd) return const Divider();
-
-        final index = i ~/ 2;
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        return ListTile(
-          title: Text(
-            _insertMyName(_suggestions[index]),
-            style: _biggerFont,
-            textAlign: TextAlign.center,
-          ),
-          onTap: () async {
-            final fakeUrl = Uri.parse("https://www.google.com/search?q=${_insertMyName(_suggestions[index])}");
-            if (!await launchUrl(fakeUrl)) {
-              throw 'Could not launch $fakeUrl';
-            }
-          },
-        );
-      },
-    );
-  }
-}
+const title = 'Hello World';
 
 class HelloWorldApp extends StatelessWidget {
+
   const HelloWorldApp({super.key});
 
   @override
@@ -60,6 +15,42 @@ class HelloWorldApp extends StatelessWidget {
         title: title,
         home: Scaffold(
             appBar: AppBar(title: const Text(title)),
-            body: Center(child: RandomWords())));
+            body: Center(
+                child: MyCounterWidget()
+            )
+        )
+    );
+  }
+}
+
+class MyCounterWidget extends StatefulWidget {
+  const MyCounterWidget({Key? key}) : super(key: key);
+
+  @override
+  _MyCounterState createState() => _MyCounterState();
+}
+
+class _MyCounterState extends State<MyCounterWidget> {
+  int _counter = 0;
+  void _increase() {
+    setState(() {
+      _counter++;
+    });
+    debugPrint('counter: $_counter');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('$_counter', style: TextStyle(fontSize: 32)),
+        const SizedBox(height: 20), // spacing of 20px height
+        ElevatedButton(
+            child: const Icon(Icons.plus_one),
+            onPressed: () => _increase() // called when the button is pressed :-)
+        ),
+      ],
+    );
   }
 }
