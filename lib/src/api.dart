@@ -14,7 +14,6 @@ bool isThereData(SharedPreferences ioModule) {
 
 List<int> loadTasksIndexes(SharedPreferences ioModule) {
   final indexString = ioModule.getString("indexes")!;
-  print("Index strin is $indexString");
   List<int> indexes = [];
   for (String index in indexString.split(" ")) {
     if(index == ""){

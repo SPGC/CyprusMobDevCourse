@@ -47,8 +47,6 @@ class _TaskListState extends State<TaskList> {
   }
 
   addNewTask(String date, String text) {
-    print(date);
-    print(text);
     var newIndex = findMaxIndex() + 1;
     var task = Task(DateTime.parse(date), text, newIndex);
     saveTask(task: task, ioModule: ioModule!);
@@ -129,9 +127,7 @@ class _TaskListState extends State<TaskList> {
             onChanged: (bool? value) {
               setState(() {
                 //task.changeStatus();
-                print(task.isDone);
                 task.isDone = value!;
-                print(task.isDone);
               });
             },
             checkColor: Colors.white,
@@ -215,7 +211,6 @@ class _TaskListState extends State<TaskList> {
                 }
                 Navigator.of(context).pop();
                 addNewTask(dateController.text, taskTextController.text);
-                print("Task added");
               },
             ),
           ],
